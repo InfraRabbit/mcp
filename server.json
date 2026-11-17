@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.infrarabbit/data",
+  "title": "InfraRabbit",
+  "description": "Published list prices of compute (VPS, GPU hours, LLM tokens, media), archived daily. Read-only.",
+  "version": "0.2.0",
+  "websiteUrl": "https://infrarabbit.com",
+  "icons": [
+    {
+      "src": "https://infrarabbit.com/assets/icon-512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://infrarabbit.com/mcp"
+    }
+  ]
+}

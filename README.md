@@ -1,11 +1,13 @@
 # InfraRabbit MCP server
 
+<img src="logo-400.png" alt="InfraRabbit logo" width="96" height="96">
+
 A free, read-only [Model Context Protocol](https://modelcontextprotocol.io) server for [InfraRabbit](https://infrarabbit.com): published list prices of compute (GPU hours, VPS plans, LLM tokens), archived daily, with history and price indices. It lets an assistant answer "what does X cost today, and when did it change" from sourced, dated data instead of from memory.
 
 - Endpoint: `https://infrarabbit.com/mcp` (remote, streamable HTTP)
 - Authentication: none
 - Registry name: `com.infrarabbit/data` (see [`server.json`](server.json))
-- Data: CC BY 4.0, list prices (not transacted prices), each with source URL and verification date
+- Data: CC BY 4.0 (the code and docs in this repository are MIT, see [`LICENSE`](LICENSE)), list prices (not transacted prices), each with source URL and verification date
 
 ## Tools
 
@@ -17,15 +19,17 @@ A free, read-only [Model Context Protocol](https://modelcontextprotocol.io) serv
 | `list_changes` | Dated price changes, new SKUs, delistings and spec changes, newest first. |
 | `changes_since` | Everything recorded since a date, for a model whose knowledge ends at a cutoff. |
 | `what_changed_since` | Same idea, grouped: new models and plans, price changes, retirements. |
+| `get_uptime` | Uptime and latency of about 24 public AI API hosts, measured by InfraRabbit every 5 minutes, with incidents per host. |
 | `cheapest_for_spec` | Cheapest active SKUs meeting a minimum spec, ranked by list price only. |
 | `vps_plans` | VPS plans as on the site and in `GET /v1/vps/plans`, same function. |
 | `stack_quote` | Best current answer for a whole stack (VPS, GPU, LLM items) in one call. |
 | `estimate_cost` | Itemised cost of a usage profile at a SKU's current list price. |
 | `get_index` | A named daily index series with its latest value and constituents. |
+| `alert_me` | Returns the URL where a person can subscribe to a free daily change email for a SKU, provider, category, index or new models. Sends nothing itself. |
 
 The list above comes from `tools/list` on the live server; that is the source of truth.
 
-## Setup
+## Connect
 
 All clients need the same two facts: URL `https://infrarabbit.com/mcp`, transport streamable HTTP, no headers.
 
@@ -68,9 +72,22 @@ claude mcp add --transport http infrarabbit https://infrarabbit.com/mcp
 }
 ```
 
+**Cline**: `cline_mcp_settings.json` (MCP Servers, Configure MCP Servers):
+
+```json
+{
+  "mcpServers": {
+    "infrarabbit": {
+      "type": "streamableHttp",
+      "url": "https://infrarabbit.com/mcp"
+    }
+  }
+}
+```
+
 **Other clients**: any client that supports remote streamable HTTP servers works with the URL above. Clients that only speak stdio can bridge with `npx mcp-remote https://infrarabbit.com/mcp`.
 
-Smithery and other directories: the server is listed through the MCP registry entry in [`server.json`](server.json).
+Contact: inbox@infrarabbit.com. Smithery and other directories: the server is listed through the MCP registry entry in [`server.json`](server.json).
 
 ## Example prompts
 
@@ -79,6 +96,10 @@ Smithery and other directories: the server is listed through the MCP registry en
 - "My knowledge ends in 2025-06. What changed in LLM prices and model lineups since?"
 - "Estimate monthly cost for 50M input and 10M output tokens on claude-sonnet-5-5."
 - "Show the h100 index over the last 90 days."
+
+## License
+
+Code and docs in this repository: MIT, see [`LICENSE`](LICENSE). Data served by the server: CC BY 4.0, see [infrarabbit.com/licensing](https://infrarabbit.com/licensing).
 
 ## Fair use
 
